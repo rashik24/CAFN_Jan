@@ -16,6 +16,46 @@ from dateutil import parser
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
+@st.cache_data
+def load_hourly(path: str) -> pd.DataFrame:
+    df = pd.read_csv(path)
+    df = df[df["day"] != "Ist"]
+    df.columns = df.columns.str.strip().str.lower()
+    df["day"] = df["day"].astype(str).str.strip().str.title()
+    df["agency"] = df["name"].astype(str).str.strip()
+    return df
+
+@st.cache_data
+def load_odm(path: str) -> pd.DataFrame:
+    df = pd.read_csv(path)
+    df.columns = df.columns.str.strip().str.lower()
+    df["agency name"] = df["agency name"].astype(str).str.strip()
+    df["address"] = df["address"].astype(str).str.strip()
+    df = df.drop(columns=["county"], errors="ignore")  # avoid county_x/county_y
+    if "geoid" in df.columns:
+        df["geoid"] = pd.to_numeric(df["geoid"], errors="coerce").fillna(-1).astype(int)
+    return df
+
+@st.cache_data
+def load_agencies_excel(path: str) -> pd.DataFrame:
+    df = pd.read_excel(path)
+    df.columns = df.columns.str.strip().str.lower()
+    # normalize merge key just in case it's numeric in one file and string in another
+    if "agency no." in df.columns:
+        df["agency no."] = df["agency no."].astype(str).str.strip()
+    return df
+
+@st.cache_resource
+def load_tracts(path: str):
+    gdf = gpd.read_file(path)
+    if gdf.crs is None or str(gdf.crs).lower() != "epsg:4326":
+        gdf = gdf.to_crs(epsg=4326)
+    # GEOID stays as string to avoid losing leading zeros
+    if "GEOID" in gdf.columns:
+        gdf["GEOID"] = gdf["GEOID"].astype(str)
+    # build spatial index for faster point-in-polygon
+    _ = gdf.sindex
+    return gdf
 
 # ───────────────────────────────────────────────────────────────────────
 # CONFIG
@@ -177,7 +217,8 @@ filtered_df = df[df["filter_1"].isin(selected_filter_1)] if selected_filter_1 el
 if not filtered_df.empty and "filter_2" in filtered_df.columns:
     st.markdown("### Select Subcategories")
     filter_2_vals = sorted(filtered_df["filter_2"].dropna().unique())
-    selected_filter_2 = st.multiselect("", filter_2_vals, label_visibility="collapsed", key="filter_2_multi")
+    #selected_filter_2 = st.multiselect("", filter_2_vals, label_visibility="collapsed", key="filter_2_multi")
+    selected_filter_2 = st.multiselect("Filter 2", filter_2_vals, label_visibility="collapsed", key="filter_2_multi")
 
     for val in filter_2_vals:
         color = "#ff7f0e"
