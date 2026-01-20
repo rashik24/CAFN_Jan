@@ -34,7 +34,7 @@ OPENCAGE_API_KEY = "f53bdda785074d5499b7a4d29d5acd1f"   # (from your code)
 geocoder = OpenCageGeocode(OPENCAGE_API_KEY)
 agencies = pd.read_csv("CAFN Jan .csv")
 agencies.columns = agencies.columns.str.strip().str.lower()
-st.write("agencies columns:", list(agencies.columns))
+#st.write("agencies columns:", list(agencies.columns))
 # ───────────────────────────────────────────────────────────────────────
 # INPUT MODE (Address vs ZIP)
 # ───────────────────────────────────────────────────────────────────────
@@ -153,7 +153,7 @@ df = df.merge(
     right_on='agency no.',
     how='left'
 )
-st.write("DF columns:", list(df.columns))
+#st.write("DF columns:", list(df.columns))
 # ───────────────────────────────────────────────────────────────────────
 # CORE FILTERS (Choice + Filter1 + Filter2) — unchanged
 # ───────────────────────────────────────────────────────────────────────
@@ -215,7 +215,7 @@ else:
 st.markdown("### 🗣️ Language Support")
 
 show_hispanic_only = st.checkbox("Show only pantries that speak Spanish/Hispanic", value=False)
-st.write("filtered_df columns:", list(filtered_df.columns))
+#st.write("filtered_df columns:", list(filtered_df.columns))
 if show_hispanic_only:
     if "hispanic" in filtered_df.columns:
         filtered_df["hispanic"] = pd.to_numeric(filtered_df["hispanic"], errors="coerce").fillna(0).astype(int)
