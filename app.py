@@ -32,7 +32,7 @@ ODM_CSV     = "ODM CAFN 2.csv"                 # your precomputed travel times &
 TRACTS_SHP  = "cb_2023_37_tract_500k.shp"
 OPENCAGE_API_KEY = "f53bdda785074d5499b7a4d29d5acd1f"   # (from your code)
 geocoder = OpenCageGeocode(OPENCAGE_API_KEY)
-agencies = pd.read_excel("CAFN Jan.xlsx")
+agencies = pd.read_csv("CAFN Jan .csv")
 agencies.columns = agencies.columns.str.strip().str.lower()
 st.write("agencies columns:", list(agencies.columns))
 # ───────────────────────────────────────────────────────────────────────
