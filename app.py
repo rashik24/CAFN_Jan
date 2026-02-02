@@ -14,7 +14,7 @@ from shapely.geometry import Point
 from opencage.geocoder import OpenCageGeocode
 from dateutil import parser
 import gspread
-from google.oauth2.service_account import Credentials
+#from google.oauth2.service_account import Credentials
 from datetime import datetime
 @st.cache_data
 def load_hourly(path: str) -> pd.DataFrame:
@@ -85,12 +85,12 @@ user_lat, user_lon, user_geoid = None, None, None
 # ───────────────────────────────────────────────────────────────────────
 # CREDENTIALS / (Optional) DRIVE CHECK (commented—same as your code)
 # ───────────────────────────────────────────────────────────────────────
-creds_ro = Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=["https://www.googleapis.com/auth/spreadsheets.readonly",
-            "https://www.googleapis.com/auth/drive.readonly"]
-)
-client_ro = gspread.authorize(creds_ro)
+# creds_ro = Credentials.from_service_account_info(
+#     st.secrets["gcp_service_account"],
+#     scopes=["https://www.googleapis.com/auth/spreadsheets.readonly",
+#             "https://www.googleapis.com/auth/drive.readonly"]
+# )
+# client_ro = gspread.authorize(creds_ro)
 
 # ───────────────────────────────────────────────────────────────────────
 # LOAD DATA
