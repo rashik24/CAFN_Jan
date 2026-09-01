@@ -176,7 +176,7 @@ if mode == "Address" and user_lat is not None and user_lon is not None:
         st.error("Could not match your location to a census tract.")
         st.stop()
 elif mode == "ZIP Code" and zip_code:
-    zip_filtered = odm_df[odm_df["zip"].astype(str) == zip_code.strip()]
+    zip_filtered = odm_df[odm_df["zip code"].astype(str) == zip_code.strip()]
     if zip_filtered.empty:
         st.warning("No agencies found in that ZIP code.")
         st.stop()
